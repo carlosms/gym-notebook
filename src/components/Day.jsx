@@ -5,21 +5,18 @@ import Button from 'react-toolbox/lib/button/Button'
 import { withRouter } from 'react-router-dom';
 
 import ExerciseCard from './ExerciseCard'
+import BackButton from './BackButton'
 
 class Day extends React.Component {
   handleNewExercise = () => {
     this.props.history.push(`/log/${this.props.date}/new`);
   }
 
-  handleBack = () => {
-    this.props.history.goBack();
-  }
-
   render() {
     const backButton = this.props.history.location.pathname !== '/' ?
       (<div>
         <br />
-        <Button icon="arrow_back" onMouseUp={this.handleBack} floating mini />
+        <BackButton/>
       </div>)
       :
       ''

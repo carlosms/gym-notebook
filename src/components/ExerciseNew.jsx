@@ -7,6 +7,8 @@ import CardActions from 'react-toolbox/lib/card/CardActions'
 import Button from 'react-toolbox/lib/button/Button'
 import Input from 'react-toolbox/lib/input/Input'
 
+import BackButton from './BackButton'
+
 class ExerciseNew extends React.Component {
   constructor(props) {
     super(props);
@@ -26,10 +28,6 @@ class ExerciseNew extends React.Component {
     this.props.history.replace(`/log/${this.props.date}/${this.props.newIndex}`)
   };
 
-  handleBack = () => {
-    this.props.history.goBack();
-  };
-
   render() {
     const disabled = (this.state.name === '');
 
@@ -46,7 +44,7 @@ class ExerciseNew extends React.Component {
           </CardActions>
         </Card>
         <br />
-        <Button icon="arrow_back" onMouseUp={this.handleBack} floating mini />
+        <BackButton/>
       </React.Fragment>
     );
   }

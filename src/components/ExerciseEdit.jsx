@@ -7,7 +7,7 @@ import CardText from 'react-toolbox/lib/card/CardText'
 import Button from 'react-toolbox/lib/button/Button'
 import Input from 'react-toolbox/lib/input/Input'
 
-import { withRouter } from 'react-router-dom';
+import BackButton from './BackButton'
 
 class ExerciseEdit extends React.Component {
   constructor(props) {
@@ -26,10 +26,6 @@ class ExerciseEdit extends React.Component {
   handleSave = () => {
     this.props.exercise.sets.push({ weight: this.state.weight, reps: this.state.reps });
     this.props.saveExercise(this.props.date, this.props.index, this.props.exercise)
-  }
-
-  handleBack = () => {
-    this.props.history.goBack();
   }
 
   render() {
@@ -81,10 +77,10 @@ class ExerciseEdit extends React.Component {
           </CardText>
         </Card>
         <br />
-        <Button icon="arrow_back" onMouseUp={this.handleBack} floating mini />
+        <BackButton />
       </React.Fragment >
     );
   }
 }
 
-export default withRouter(ExerciseEdit);
+export default ExerciseEdit;
