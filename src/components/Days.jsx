@@ -5,10 +5,6 @@ import Navigation from 'react-toolbox/lib/navigation/Navigation';
 import Day from './Day'
 
 class Days extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleNextDay = () => {
     this.props.onCurrDateChange(1)
   };
@@ -16,6 +12,10 @@ class Days extends React.Component {
   handlePrevDay = () => {
     this.props.onCurrDateChange(-1)
   };
+
+  handleSelectDay = () => {
+    this.props.history.push(`/log/${this.props.currDate}`);
+  }
 
   render() {
     let currDateData = this.props.data[this.props.currDate];
@@ -27,12 +27,14 @@ class Days extends React.Component {
           actions={
             [
               { icon: 'chevron_left', raised: true, primary: false, onMouseUp: this.handlePrevDay },
-              { label: this.props.currDate, flat: true, disabled: true },
+              { label: this.props.currDate, flat: true, disabled: false, onMouseUp: this.handleSelectDay },
               { icon: 'chevron_right', raised: true, primary: false, onMouseUp: this.handleNextDay },
             ]
           } />
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem', maxWidth: '500px', margin: 'auto' }}>
-          <Day exercises={exercises}>
+          <Day
+            date={this.props.currDate}
+            exercises={exercises}>
           </Day>
         </div>
       </div>

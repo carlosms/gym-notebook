@@ -13,6 +13,9 @@ import Panel from 'react-toolbox/lib/layout/Panel'
 import Sidebar from 'react-toolbox/lib/layout/Sidebar'
 
 import Days from './Days'
+import Day from './Day'
+import ExerciseEdit from './ExerciseEdit'
+import ExerciseNew from './ExerciseNew'
 
 import mockData from '../data/mock-data'
 
@@ -48,14 +51,95 @@ class Main extends React.Component {
     this.setState({ currDate: this.formatDate(d) })
   }
 
-  render() {
+  saveExercise = (date, index, exercise) => {
+    let data = this.state.data
+    let dateData = data[date];
 
+    if (dateData === undefined) {
+      data[date] = { exercises: [] }
+      dateData = data[date];
+    }
+
+    let exercises = dateData.exercises;
+    exercises[index] = exercise;
+
+    this.setState({ data: data });
+  }
+
+  getExercises = (date) => {
+    const currDateData = this.state.data[this.state.currDate];
+    return currDateData !== undefined ? currDateData.exercises : []; 
+  }
+
+  createExercise = (date, name) => {
+    let data = this.state.data
+    let dateData = data[date];
+
+    if (dateData === undefined) {
+      data[date] = { exercises: [] }
+      dateData = data[date];
+    }
+
+    let exercises = dateData.exercises;
+    exercises.push({ name: name, sets: [] });
+
+    this.setState({ data: data });
+  }
+
+  render() {
     const DaysComponent = (props) => {
       return (
         <Days
           data={this.state.data}
           currDate={this.state.currDate}
           onCurrDateChange={this.onCurrDateChange}
+          {...props}
+        />
+      );
+    }
+
+    const DayComponent = (props) => {
+      return (
+        <Day
+          date={this.state.currDate}
+          exercises={this.getExercises(this.state.currDate)}
+          {...props}
+        />
+      )
+    }
+
+    const ExerciseEditComponent = (props) => {
+      const date = props.match.params.date;
+      const index = props.match.params.index;
+
+      let dateData = this.state.data[date];
+      let exercises = dateData !== undefined ? dateData.exercises : [];
+      let exercise = exercises[index];
+
+      // TODO: return to '/' for a non-existing url
+
+      return (
+        <ExerciseEdit
+          exercise={exercise}
+          date={date}
+          index={index}
+          saveExercise={this.saveExercise}
+          {...props}
+        />
+      );
+    }
+
+    const ExerciseNewComponent = (props) => {
+      const date = props.match.params.date;
+
+      let dateData = this.state.data[date];
+      let exercises = dateData !== undefined ? dateData.exercises : [];
+
+      return (
+        <ExerciseNew
+          date={date}
+          newIndex={exercises.length}
+          createExercise={this.createExercise}
           {...props}
         />
       );
@@ -73,6 +157,18 @@ class Main extends React.Component {
             <AppBar leftIcon='menu' onLeftIconClick={this.toggleDrawerPinned} title="Gym Notebook" />
             <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem', maxWidth: '500px', margin: 'auto' }}>
               <Route exact path="/" render={DaysComponent} />
+              <Route
+                exact path="/log/:date"
+                render={DayComponent}
+              />
+              <Route
+                path="/log/:date/new"
+                render={ExerciseNewComponent}
+              />
+              <Route
+                path="/log/:date/:index(\d+)"
+                render={ExerciseEditComponent}
+              />
             </div>
           </Panel>
           <Sidebar pinned={this.state.sidebarPinned} width={5}>
