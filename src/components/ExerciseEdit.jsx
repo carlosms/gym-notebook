@@ -9,6 +9,8 @@ import Input from 'react-toolbox/lib/input/Input'
 
 import BackButton from './BackButton'
 
+import "./ExerciseCard.css";
+
 class ExerciseEdit extends React.Component {
   constructor(props) {
     super(props);
@@ -52,24 +54,14 @@ class ExerciseEdit extends React.Component {
             <Button label="Delete" style={deleteStyle} onMouseUp={this.handleDelete} />
           </CardActions>
           <CardText>
-            <table>
+            <table className="exercise_card">
               <tbody>
                 {this.props.exercise.sets.map((set, index) =>
                   <tr key={index}>
-                    <td>
-                      {set.weight}
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                      kgs
-                    </td>
-                    <td>
-                      {set.reps}
-                    </td>
-                    <td>
-                      reps
-                    </td>
+                    <td className="exercise_number">{set.weight}</td>
+                    <td className="exercise_label">kgs</td>
+                    <td className="exercise_number">{set.reps}</td>
+                    <td className="exercise_label">reps</td>
                   </tr>
                 )}
               </tbody>

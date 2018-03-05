@@ -20,13 +20,13 @@ class ExerciseCard extends React.Component {
     return <Card>
         <CardTitle title={this.props.exercise.name} />
         <CardText>
-          <table class="exercise_card">
+          <table className="exercise_card">
             <tbody>
               {this.props.exercise.sets.map((set, index) => <tr key={index}>
-                  <td class="exercise_number">{set.weight}</td>
-                  <td class="exercise_label">kgs</td>
-                  <td class="exercise_number">{set.reps}</td>
-                  <td class="exercise_label">reps</td>
+                  <td className="exercise_number">{set.weight}</td>
+                  <td className="exercise_label">kgs</td>
+                  <td className="exercise_number">{set.reps}</td>
+                  <td className="exercise_label">reps</td>
                 </tr>)}
             </tbody>
           </table>
