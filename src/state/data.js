@@ -65,4 +65,15 @@ export function createExercise(date, name) {
   }
 }
 
+// Selectors
+
+export function getExercises(state, date) {
+  const currDateData = state[date];
+  return currDateData !== undefined ? currDateData.exercises : [];
+};
+
+export function getExercise(state, date, index) {
+  return getExercises(state, date)[index];
+};
+
 export default reducer;

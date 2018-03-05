@@ -21,9 +21,6 @@ class Days extends React.Component {
   }
 
   render() {
-    let currDateData = this.props.data[this.props.currDate];
-    let exercises = currDateData !== undefined ? currDateData.exercises : [];
-
     return (
       <div>
         <Navigation type='horizontal'
@@ -35,9 +32,7 @@ class Days extends React.Component {
             ]
           } />
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem', maxWidth: '500px', margin: 'auto' }}>
-          <Day
-            exercises={exercises}>
-          </Day>
+          <Day/>
         </div>
       </div>
     );

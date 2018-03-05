@@ -11,6 +11,7 @@ import {
   toggleSidebarPinned
 } from "../state/drawer";
 import { currDateSet } from "../state/currDate";
+import { getExercise } from "../state/data";
 
 import AppBar from 'react-toolbox/lib/app_bar/AppBar'
 import IconButton from 'react-toolbox/lib/button/IconButton'
@@ -26,12 +27,6 @@ import ExerciseEdit from './ExerciseEdit'
 import ExerciseNew from './ExerciseNew'
 
 class Main extends React.Component {
-  // TODO: move to state/data?
-  getExercises = (date) => {
-    const currDateData = this.props.data[date];
-    return currDateData !== undefined ? currDateData.exercises : []; 
-  }
-
   render() {
     const DayComponent = (props) => {
       const date = props.match.params.date;
@@ -39,7 +34,6 @@ class Main extends React.Component {
 
       return (
         <Day
-          exercises={this.getExercises(this.props.currDate)}
           {...props}
         />
       )
@@ -49,15 +43,15 @@ class Main extends React.Component {
       const date = props.match.params.date;
       const index = props.match.params.index;
 
-      let dateData = this.props.data[date];
-      let exercises = dateData !== undefined ? dateData.exercises : [];
-      let exercise = exercises[index];
-
-      // TODO: return to '/' for a non-existing url
+      // return to '/' for a non-existing url
+      // TODO: find a better way to do this
+      if (this.props.getExercise(date, index) === undefined) {
+        props.history.replace(`/`);
+        return <div/>;
+      }
 
       return (
         <ExerciseEdit
-          exercise={exercise}
           date={date}
           index={index}
           {...props}
@@ -141,6 +135,9 @@ const mapStateToProps = state => {
     sidebarPinned: state.drawer.sidebarPinned,
 
     currDate: state.currDate,
+
+    // selectors
+    getExercise: (date, index) => getExercise(state.data, date, index),
   };
 };
 

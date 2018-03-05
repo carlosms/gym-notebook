@@ -11,6 +11,7 @@ import BackButton from './BackButton'
 
 import { connect } from "react-redux";
 import { saveExercise } from "../state/data";
+import { getExercise } from "../state/data";
 
 import "./ExerciseCard.css";
 
@@ -18,6 +19,10 @@ class ExerciseEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = { weight: '', reps: '' };
+  }
+
+  exercise = () => {
+    return this.props.getExercise(this.props.date, this.props.index);
   }
 
   handleChange = (name, value) => {
@@ -29,7 +34,7 @@ class ExerciseEdit extends React.Component {
   };
 
   handleSave = () => {
-    let updated = Object.assign({}, this.props.exercise);
+    let updated = Object.assign({}, this.exercise());
     updated.sets.push({ weight: this.state.weight, reps: this.state.reps });
     this.props.saveExercise(this.props.date, this.props.index, updated);
   }
@@ -46,7 +51,7 @@ class ExerciseEdit extends React.Component {
     return (
       <React.Fragment >
         <Card>
-          <CardTitle title={this.props.exercise.name}>
+          <CardTitle title={this.exercise().name}>
           </CardTitle>
           <CardText>
             <Input type='number' label='Weight (kgs)' value={this.state.weight} onChange={this.handleChange.bind(this, 'weight')} />
@@ -60,7 +65,7 @@ class ExerciseEdit extends React.Component {
           <CardText>
             <table className="exercise_card">
               <tbody>
-                {this.props.exercise.sets.map((set, index) =>
+                {this.exercise().sets.map((set, index) =>
                   <tr key={index}>
                     <td className="exercise_number">{set.weight}</td>
                     <td className="exercise_label">kgs</td>
@@ -89,6 +94,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
+    // selectors
+    getExercise: (date, index) => getExercise(state.data, date, index),
   };
 };
 

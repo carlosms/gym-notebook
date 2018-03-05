@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
+import { getExercises } from "../state/data";
 
 import Button from 'react-toolbox/lib/button/Button'
 
@@ -43,7 +44,11 @@ class Day extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    date: state.currDate
+    date: state.currDate,
+    exercises: getExercises(state.data, state.currDate),
+
+    // selectors
+    getExercises: (date) => getExercises(state.data, date),
   };
 };
 
