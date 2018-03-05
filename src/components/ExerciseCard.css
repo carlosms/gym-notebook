@@ -1,0 +1,12 @@
+table.exercise_card {
+  width: 50%;
+  margin: auto;
+}
+
+.exercise_card .exercise_number {
+  text-align: right;
+}
+
+.exercise_card .exercise_label {
+  text-align: left;
+}
