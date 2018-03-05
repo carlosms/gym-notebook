@@ -15,18 +15,12 @@ export const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE_DRAWER_PINNED:
-      return Object.assign({}, state, {
-        drawerPinned: !state.drawerPinned
-      });
+      return { ...state, drawerPinned: !state.drawerPinned };
     case TOGGLE_DRAWER_ACTIVE:
-      return Object.assign({}, state, {
-        drawerActive: !state.drawerActive
-      });
+      return { ...state, drawerActive: !state.drawerActive };
     case TOGGLE_SIDEBAR_PINNED:
-      return Object.assign({}, state, {
-        sidebarPinned: !state.sidebarPinned
-      });
-      default:
+      return { ...state, sidebarPinned: !state.sidebarPinned };
+    default:
       return state;
   }
 };
