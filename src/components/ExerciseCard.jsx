@@ -38,16 +38,10 @@ class ExerciseCard extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    // TODO history
-  };
-};
-
 const mapStateToProps = state => {
   return {
     date: state.currDate
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)( withRouter(ExerciseCard) );
+export default connect(mapStateToProps)( withRouter(ExerciseCard) );
