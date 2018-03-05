@@ -25,58 +25,14 @@ import Day from './Day'
 import ExerciseEdit from './ExerciseEdit'
 import ExerciseNew from './ExerciseNew'
 
-import mockData from '../data/mock-data'
-
 class Main extends React.Component {
-  state = {
-    data: mockData
-  };
-
-  saveExercise = (date, index, exercise) => {
-    let data = this.state.data
-    let dateData = data[date];
-
-    if (dateData === undefined) {
-      data[date] = { exercises: [] }
-      dateData = data[date];
-    }
-
-    let exercises = dateData.exercises;
-    exercises[index] = exercise;
-
-    this.setState({ data: data });
-  }
-
+  // TODO: move to state/data?
   getExercises = (date) => {
-    const currDateData = this.state.data[this.props.currDate];
+    const currDateData = this.props.data[date];
     return currDateData !== undefined ? currDateData.exercises : []; 
   }
 
-  createExercise = (date, name) => {
-    let data = this.state.data
-    let dateData = data[date];
-
-    if (dateData === undefined) {
-      data[date] = { exercises: [] }
-      dateData = data[date];
-    }
-
-    let exercises = dateData.exercises;
-    exercises.push({ name: name, sets: [] });
-
-    this.setState({ data: data });
-  }
-
   render() {
-    const DaysComponent = (props) => {
-      return (
-        <Days
-          data={this.state.data}
-          {...props}
-        />
-      );
-    }
-
     const DayComponent = (props) => {
       const date = props.match.params.date;
       this.props.onCurrDateSet(date);
@@ -93,7 +49,7 @@ class Main extends React.Component {
       const date = props.match.params.date;
       const index = props.match.params.index;
 
-      let dateData = this.state.data[date];
+      let dateData = this.props.data[date];
       let exercises = dateData !== undefined ? dateData.exercises : [];
       let exercise = exercises[index];
 
@@ -104,7 +60,6 @@ class Main extends React.Component {
           exercise={exercise}
           date={date}
           index={index}
-          saveExercise={this.saveExercise}
           {...props}
         />
       );
@@ -113,14 +68,13 @@ class Main extends React.Component {
     const ExerciseNewComponent = (props) => {
       const date = props.match.params.date;
 
-      let dateData = this.state.data[date];
+      let dateData = this.props.data[date];
       let exercises = dateData !== undefined ? dateData.exercises : [];
 
       return (
         <ExerciseNew
           date={date}
           newIndex={exercises.length}
-          createExercise={this.createExercise}
           {...props}
         />
       );
@@ -141,7 +95,7 @@ class Main extends React.Component {
               onLeftIconClick={this.props.onToggleDrawerPinnedClick}
               title="Gym Notebook" />
             <div style={{ flex: 1, overflowY: "auto", padding: "1.8rem", maxWidth: "500px", margin: "auto" }}>
-              <Route exact path="/" render={DaysComponent} />
+              <Route exact path="/" component={Days} />
               <Route exact path="/log/:date" render={DayComponent} />
               <Route path="/log/:date/new" render={ExerciseNewComponent} />
               <Route path="/log/:date/:index(\d+)" render={ExerciseEditComponent} />
@@ -180,6 +134,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
+    data: state.data,
+
     drawerActive: state.drawer.drawerActive,
     drawerPinned: state.drawer.drawerPinned,
     sidebarPinned: state.drawer.sidebarPinned,

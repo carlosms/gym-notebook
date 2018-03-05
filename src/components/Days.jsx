@@ -54,6 +54,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
+    data: state.data,
     currDate: state.currDate
   };
 };

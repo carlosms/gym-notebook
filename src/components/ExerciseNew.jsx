@@ -9,6 +9,9 @@ import Input from 'react-toolbox/lib/input/Input'
 
 import BackButton from './BackButton'
 
+import { connect } from "react-redux";
+import { createExercise } from "../state/data";
+
 class ExerciseNew extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +28,7 @@ class ExerciseNew extends React.Component {
 
   handleSave = () => {
     this.props.createExercise(this.props.date, this.state.name);
-    this.props.history.replace(`/log/${this.props.date}/${this.props.newIndex}`)
+    this.props.history.replace(`/log/${this.props.date}/${this.props.newIndex}`);
   };
 
   render() {
@@ -50,4 +53,16 @@ class ExerciseNew extends React.Component {
   }
 }
 
-export default ExerciseNew;
+const mapDispatchToProps = dispatch => {
+  return {
+    createExercise: (date, name) => {
+      dispatch(createExercise(date, name));
+    }
+  };
+};
+
+const mapStateToProps = state => {
+  return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExerciseNew);

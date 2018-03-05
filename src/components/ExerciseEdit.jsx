@@ -9,6 +9,9 @@ import Input from 'react-toolbox/lib/input/Input'
 
 import BackButton from './BackButton'
 
+import { connect } from "react-redux";
+import { saveExercise } from "../state/data";
+
 import "./ExerciseCard.css";
 
 class ExerciseEdit extends React.Component {
@@ -26,8 +29,9 @@ class ExerciseEdit extends React.Component {
   };
 
   handleSave = () => {
-    this.props.exercise.sets.push({ weight: this.state.weight, reps: this.state.reps });
-    this.props.saveExercise(this.props.date, this.props.index, this.props.exercise)
+    let updated = Object.assign({}, this.props.exercise);
+    updated.sets.push({ weight: this.state.weight, reps: this.state.reps });
+    this.props.saveExercise(this.props.date, this.props.index, updated);
   }
 
   render() {
@@ -75,4 +79,17 @@ class ExerciseEdit extends React.Component {
   }
 }
 
-export default ExerciseEdit;
+const mapDispatchToProps = dispatch => {
+  return {
+    saveExercise: (date, index, exercise) => {
+      dispatch(saveExercise(date, index, exercise));
+    },
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExerciseEdit);
