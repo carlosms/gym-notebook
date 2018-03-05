@@ -10,6 +10,7 @@ import {
   toggleDrawerActive,
   toggleSidebarPinned
 } from "../state/drawer";
+import { currDateSet } from "../state/currDate";
 
 import AppBar from 'react-toolbox/lib/app_bar/AppBar'
 import IconButton from 'react-toolbox/lib/button/IconButton'
@@ -28,19 +29,8 @@ import mockData from '../data/mock-data'
 
 class Main extends React.Component {
   state = {
-    currDate: "2018-01-23",
     data: mockData
   };
-
-  formatDate(date) {
-    return date.toISOString().slice(0, 10)
-  }
-
-  onCurrDateChange = (n) => {
-    let d = new Date(this.state.currDate)
-    d.setDate(d.getDate() + n);
-    this.setState({ currDate: this.formatDate(d) })
-  }
 
   saveExercise = (date, index, exercise) => {
     let data = this.state.data
@@ -58,7 +48,7 @@ class Main extends React.Component {
   }
 
   getExercises = (date) => {
-    const currDateData = this.state.data[this.state.currDate];
+    const currDateData = this.state.data[this.props.currDate];
     return currDateData !== undefined ? currDateData.exercises : []; 
   }
 
@@ -82,18 +72,18 @@ class Main extends React.Component {
       return (
         <Days
           data={this.state.data}
-          currDate={this.state.currDate}
-          onCurrDateChange={this.onCurrDateChange}
           {...props}
         />
       );
     }
 
     const DayComponent = (props) => {
+      const date = props.match.params.date;
+      this.props.onCurrDateSet(date);
+
       return (
         <Day
-          date={this.state.currDate}
-          exercises={this.getExercises(this.state.currDate)}
+          exercises={this.getExercises(this.props.currDate)}
           {...props}
         />
       )
@@ -180,7 +170,11 @@ const mapDispatchToProps = dispatch => {
     },
     toggleSidebarClick: () => {
       dispatch(toggleSidebarPinned());
-    }
+    },
+
+    onCurrDateSet: (date) => {
+      dispatch(currDateSet(date))
+    },
   };
 };
 
@@ -188,7 +182,9 @@ const mapStateToProps = state => {
   return {
     drawerActive: state.drawer.drawerActive,
     drawerPinned: state.drawer.drawerPinned,
-    sidebarPinned: state.drawer.sidebarPinned
+    sidebarPinned: state.drawer.sidebarPinned,
+
+    currDate: state.currDate,
   };
 };
 

@@ -4,6 +4,9 @@ import Navigation from 'react-toolbox/lib/navigation/Navigation';
 
 import Day from './Day'
 
+import { connect } from "react-redux";
+import { currDateChange } from "../state/currDate";
+
 class Days extends React.Component {
   handleNextDay = () => {
     this.props.onCurrDateChange(1)
@@ -33,7 +36,6 @@ class Days extends React.Component {
           } />
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem', maxWidth: '500px', margin: 'auto' }}>
           <Day
-            date={this.props.currDate}
             exercises={exercises}>
           </Day>
         </div>
@@ -42,4 +44,18 @@ class Days extends React.Component {
   }
 }
 
-export default Days;
+const mapDispatchToProps = dispatch => {
+  return {
+    onCurrDateChange: (n) => {
+      dispatch(currDateChange(n));
+    },
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    currDate: state.currDate
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Days);

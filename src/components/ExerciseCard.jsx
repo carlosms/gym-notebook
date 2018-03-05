@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 import Card from 'react-toolbox/lib/card/Card'
 import CardTitle from 'react-toolbox/lib/card/CardTitle'
@@ -37,4 +38,16 @@ class ExerciseCard extends React.Component {
   }
 }
 
-export default withRouter(ExerciseCard);
+const mapDispatchToProps = dispatch => {
+  return {
+    // TODO history
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    date: state.currDate
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)( withRouter(ExerciseCard) );

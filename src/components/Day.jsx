@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 import Button from 'react-toolbox/lib/button/Button'
 
@@ -26,7 +27,6 @@ class Day extends React.Component {
         {this.props.exercises.map((exercise, index) =>
           <React.Fragment key={exercise.name}>
             <ExerciseCard
-              date={this.props.date}
               exercise={exercise}
               index={index} />
             <br />
@@ -41,4 +41,16 @@ class Day extends React.Component {
   }
 }
 
-export default withRouter(Day);
+const mapDispatchToProps = dispatch => {
+  return {
+    // TODO history
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    date: state.currDate
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)( withRouter(Day) );

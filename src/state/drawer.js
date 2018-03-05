@@ -1,5 +1,3 @@
-//export const TEST = "TEST";
-
 // Actions
 
 export const TOGGLE_DRAWER_PINNED = "TOGGLE_DRAWER_PINNED";
