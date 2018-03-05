@@ -4,6 +4,13 @@ import {
   Route
 } from 'react-router-dom'
 
+import { connect } from "react-redux";
+import {
+  toggleDrawerPinned,
+  toggleDrawerActive,
+  toggleSidebarPinned
+} from "../state/drawer";
+
 import AppBar from 'react-toolbox/lib/app_bar/AppBar'
 import IconButton from 'react-toolbox/lib/button/IconButton'
 
@@ -21,24 +28,8 @@ import mockData from '../data/mock-data'
 
 class Main extends React.Component {
   state = {
-    drawerActive: false,
-    drawerPinned: false,
-    sidebarPinned: false,
-
     currDate: "2018-01-23",
     data: mockData
-  };
-
-  toggleDrawerActive = () => {
-    this.setState({ drawerActive: !this.state.drawerActive });
-  };
-
-  toggleDrawerPinned = () => {
-    this.setState({ drawerPinned: !this.state.drawerPinned });
-  }
-
-  toggleSidebar = () => {
-    this.setState({ sidebarPinned: !this.state.sidebarPinned });
   };
 
   formatDate(date) {
@@ -145,42 +136,63 @@ class Main extends React.Component {
       );
     }
 
-    return (
-      <Router>
+    return <Router>
         <Layout>
-          <NavDrawer active={this.state.drawerActive}
-            pinned={this.state.drawerPinned} permanentAt='xxxl'
-            onOverlayClick={this.toggleDrawerActive}>
+          <NavDrawer
+            active={this.props.drawerActive}
+            pinned={this.props.drawerPinned}
+            permanentAt="xxxl"
+            onOverlayClick={this.props.onToggleDrawerActiveClick}>
             <p>Navigation menu</p>
           </NavDrawer>
           <Panel>
-            <AppBar leftIcon='menu' onLeftIconClick={this.toggleDrawerPinned} title="Gym Notebook" />
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.8rem', maxWidth: '500px', margin: 'auto' }}>
+            <AppBar
+              leftIcon="menu"
+              onLeftIconClick={this.props.onToggleDrawerPinnedClick}
+              title="Gym Notebook" />
+            <div style={{ flex: 1, overflowY: "auto", padding: "1.8rem", maxWidth: "500px", margin: "auto" }}>
               <Route exact path="/" render={DaysComponent} />
-              <Route
-                exact path="/log/:date"
-                render={DayComponent}
-              />
-              <Route
-                path="/log/:date/new"
-                render={ExerciseNewComponent}
-              />
-              <Route
-                path="/log/:date/:index(\d+)"
-                render={ExerciseEditComponent}
-              />
+              <Route exact path="/log/:date" render={DayComponent} />
+              <Route path="/log/:date/new" render={ExerciseNewComponent} />
+              <Route path="/log/:date/:index(\d+)" render={ExerciseEditComponent} />
             </div>
           </Panel>
-          <Sidebar pinned={this.state.sidebarPinned} width={5}>
-            <div><IconButton icon='close' onClick={this.toggleSidebar} /></div>
+          <Sidebar pinned={this.props.sidebarPinned} width={5}>
+            <div>
+              <IconButton icon="close" onClick={this.props.toggleSidebarClick} />
+            </div>
             <div style={{ flex: 1 }}>
               <p>Supplemental content goes here.</p>
             </div>
           </Sidebar>
         </Layout>
-      </Router>
-    );
+      </Router>;
   }
 }
 
-export default Main;
+const mapDispatchToProps = dispatch => {
+  return {
+    onToggleDrawerPinnedClick: () => {
+      dispatch(toggleDrawerPinned());
+    },
+    onToggleDrawerActiveClick: () => {
+      dispatch(toggleDrawerActive());
+    },
+    toggleSidebarClick: () => {
+      dispatch(toggleSidebarPinned());
+    }
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    drawerActive: state.drawer.drawerActive,
+    drawerPinned: state.drawer.drawerPinned,
+    sidebarPinned: state.drawer.sidebarPinned
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Main);
