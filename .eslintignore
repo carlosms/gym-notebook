@@ -1,0 +1,4 @@
+src/react-toolbox/
+src/registerServiceWorker.js
+src/data/mock-data.js
+src/App.test.js
