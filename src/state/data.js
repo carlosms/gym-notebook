@@ -34,6 +34,9 @@ const reducer = (state = initialState, action) => {
 
     case CREATE_EXERCISE: {
       let data = Object.assign({}, state);
+
+      initDay(data, action.date);
+
       let exercises = getExercises(data, action.date);
 
       exercises.push({ name: action.name, sets: [] });
@@ -45,6 +48,16 @@ const reducer = (state = initialState, action) => {
       return state;
   }
 };
+
+// Helpers
+
+function initDay(state, date) {
+  if (state[date] === undefined) {
+    state[date] = {
+      exercises: []
+    };
+  }
+}
 
 // Action Creators
 
