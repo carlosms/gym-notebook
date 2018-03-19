@@ -18,7 +18,7 @@ import "./ExerciseCard.css";
 class ExerciseEdit extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { weight: '', reps: '' };
+    this.state = { weight: "", reps: "", editIndex: null };
   }
 
   exercise = () => {
@@ -39,21 +39,77 @@ class ExerciseEdit extends React.Component {
     this.props.saveExercise(this.props.date, this.props.index, updated);
   };
 
-  handleClear = () => {
-    this.setState({ ...this.state, weight: '', reps: '' });
+  handleUpdate = () => {
+    let updated = Object.assign({}, this.exercise());
+    let set = updated.sets[this.state.editIndex];
+    updated.sets[this.state.editIndex] = {
+      ...set,
+      weight: this.state.weight,
+      reps: this.state.reps
+    };
+
+    this.props.saveExercise(this.props.date, this.props.index, updated);
+    this.unselect();
   };
 
+  handleDelete = () => {
+    let updated = Object.assign({}, this.exercise());
+    updated.sets.splice(this.state.editIndex, 1);
+
+    this.props.saveExercise(this.props.date, this.props.index, updated);
+    this.unselect();
+  };
+
+  handleClear = () => {
+    this.setState({ ...this.state, weight: "", reps: "" });
+  };
+
+  unselect = () => {
+    this.setState({
+      ...this.state,
+      editIndex: null,
+      weight: "",
+      reps: ""
+    });
+  };
+
+  onRowClick = index => () => {
+    if (this.state.editIndex === index) {
+      this.unselect();
+      return;
+    }
+
+    const set = this.exercise().sets[index];
+    this.setState({
+      ...this.state,
+      editIndex: index,
+      weight: set.weight,
+      reps: set.reps
+    });
+  };
+
+  trClass = (index) => {
+    if (this.state.editIndex === index) {
+      return 'selected';
+    }
+
+    return '';
+  }
+
   render() {
-    const saveStyle = { flexGrow: 1 };
-    const clearStyle = { flexGrow: 1 };
-    const updateStyle = { flexGrow: 1,  display: "none" };
-    const deleteStyle = { flexGrow: 1,  display: "none" };
+    const visibleStyle = { flexGrow: 1 };
+    const hiddenStyle = { flexGrow: 1, display: "none" };
+
+    const editing = this.state.editIndex !== null;
+
+    const saveStyle = editing ? hiddenStyle : visibleStyle;
+    const clearStyle = editing ? hiddenStyle : visibleStyle;
+    const updateStyle = editing ? visibleStyle : hiddenStyle;
+    const deleteStyle = editing ? visibleStyle : hiddenStyle;
 
     const inputStyle = { flexGrow: "1", margin: "0 20px" };
 
     const disabled = this.state.weight === "" || this.state.reps === "";
-
-    // TODO: Select sets from the table, fill values, and show the Update and Delete buttons
 
     return (
       <React.Fragment>
@@ -77,7 +133,14 @@ class ExerciseEdit extends React.Component {
               />
             </div>
           </CardText>
-          <CardActions style={{ width: "80%", margin: "auto", display: "flex", justifyContent: "center" }}>
+          <CardActions
+            style={{
+              width: "80%",
+              margin: "auto",
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
             <Button
               icon="check"
               label="Save"
@@ -106,10 +169,10 @@ class ExerciseEdit extends React.Component {
             />
           </CardActions>
           <CardText>
-            <table className="exercise_card">
+            <table className="exercise_card edit">
               <tbody>
                 {this.exercise().sets.map((set, index) => (
-                  <tr key={index}>
+                  <tr key={index} className={this.trClass(index)} onClick={this.onRowClick(index)}>
                     <td className="exercise_number">{set.weight}</td>
                     <td className="exercise_label">kgs</td>
                     <td className="exercise_number">{set.reps}</td>
