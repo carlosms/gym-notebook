@@ -1,15 +1,15 @@
 // Actions
 
-export const TOGGLE_DRAWER_PINNED = "TOGGLE_DRAWER_PINNED";
-export const TOGGLE_DRAWER_ACTIVE = "TOGGLE_DRAWER_ACTIVE";
-export const TOGGLE_SIDEBAR_PINNED = "TOGGLE_SIDEBAR_PINNED";
+export const TOGGLE_DRAWER_PINNED = 'TOGGLE_DRAWER_PINNED';
+export const TOGGLE_DRAWER_ACTIVE = 'TOGGLE_DRAWER_ACTIVE';
+export const TOGGLE_SIDEBAR_PINNED = 'TOGGLE_SIDEBAR_PINNED';
 
 // Reducer
 
 export const initialState = {
   drawerActive: false,
   drawerPinned: false,
-  sidebarPinned: false
+  sidebarPinned: false,
 };
 
 const reducer = (state = initialState, action) => {

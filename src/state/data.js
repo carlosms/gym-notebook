@@ -1,31 +1,35 @@
-import mockData from "../data/mock-data";
+import mockData from '../data/mock-data';
 
 // Actions
 
-export const SAVE_EXERCISE = "SAVE_EXERCISE";
-export const CREATE_EXERCISE = "CREATE_EXERCISE";
-
-
-// Reducer
+export const SAVE_EXERCISE = 'SAVE_EXERCISE';
+export const CREATE_EXERCISE = 'CREATE_EXERCISE';
 
 export const initialState = mockData;
 
-function getExercises(data, date) {
-  let dateData = data[date];
+// Helpers
 
-  if (dateData === undefined) {
-    data[date] = { exercises: [] };
-    dateData = data[date];
+/* eslint-disable no-param-reassign */
+function initDay(state, date) {
+  if (state[date] === undefined) {
+    state[date] = {
+      exercises: [],
+    };
   }
-
-  return dateData.exercises;
 }
+
+function getExercisesFromState(state, date) {
+  initDay(state, date);
+  return state[date].exercises;
+}
+
+// Reducer
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_EXERCISE: {
-      let data = Object.assign({}, state);
-      let exercises = getExercises(data, action.date);
+      const data = Object.assign({}, state);
+      const exercises = getExercisesFromState(data, action.date);
 
       exercises[action.index] = action.exercise;
 
@@ -33,11 +37,11 @@ const reducer = (state = initialState, action) => {
     }
 
     case CREATE_EXERCISE: {
-      let data = Object.assign({}, state);
+      const data = Object.assign({}, state);
 
       initDay(data, action.date);
 
-      let exercises = getExercises(data, action.date);
+      const exercises = getExercisesFromState(data, action.date);
 
       exercises.push({ name: action.name, sets: [] });
 
@@ -49,33 +53,23 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-// Helpers
-
-function initDay(state, date) {
-  if (state[date] === undefined) {
-    state[date] = {
-      exercises: []
-    };
-  }
-}
-
 // Action Creators
 
 export function saveExercise(date, index, exercise) {
   return {
     type: SAVE_EXERCISE,
-    date: date,
-    index: index,
-    exercise: exercise,
-  }
+    date,
+    index,
+    exercise,
+  };
 }
 
 export function createExercise(date, name) {
   return {
     type: CREATE_EXERCISE,
-    date: date,
-    name: name
-  }
+    date,
+    name,
+  };
 }
 
 // Selectors
@@ -83,10 +77,10 @@ export function createExercise(date, name) {
 export function getExercises(state, date) {
   const currDateData = state[date];
   return currDateData !== undefined ? currDateData.exercises : [];
-};
+}
 
 export function getExercise(state, date, index) {
   return getExercises(state, date)[index];
-};
+}
 
 export default reducer;
