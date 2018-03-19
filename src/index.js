@@ -9,19 +9,16 @@ import theme from './react-toolbox/theme';
 import './react-toolbox/theme.css';
 
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import rootReducer from "./state";
-
-let store = createStore(
-  rootReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+import { PersistGate } from "redux-persist/lib/integration/react";
+import { persistor, store } from "./state";
 
 ReactDOM.render(
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <PersistGate loading={null} persistor={persistor}>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </PersistGate>
   </Provider>
   , document.getElementById('root'));
 registerServiceWorker();
