@@ -1,0 +1,6 @@
+@import '../common.css';
+
+.empty-log {
+  color: var(--palette-grey-500);
+  padding: 2em 0px;
+}

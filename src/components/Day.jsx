@@ -9,6 +9,8 @@ import { withRouter } from 'react-router-dom';
 import ExerciseCard from './ExerciseCard'
 import BackButton from './BackButton'
 
+import "./Day.css";
+
 class Day extends React.Component {
   handleNewExercise = () => {
     this.props.history.push(`/log/${this.props.date}/new`);
@@ -25,14 +27,19 @@ class Day extends React.Component {
 
     return (
       <div>
-        {this.props.exercises.map((exercise, index) =>
+        {this.props.exercises.length > 0 ? (
+        this.props.exercises.map((exercise, index) =>
           <React.Fragment key={exercise.name}>
             <ExerciseCard
               exercise={exercise}
               index={index} />
             <br />
           </React.Fragment>
-        )}
+        )
+        ) : (
+          <p className="empty-log">Workout log is empty</p>
+        )
+      }
         <Button icon='add' label='New exercise'
           onMouseUp={this.handleNewExercise}
           flat primary />
